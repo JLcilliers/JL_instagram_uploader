@@ -14,7 +14,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Serve static files - but handle root path specially for Vercel
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.use(express.static('public'));
 
 // Use /tmp for uploads in serverless environment
@@ -201,13 +208,27 @@ async function generateImage(postContent) {
     }
 }
 
-const SchedulingHelper = require('./utils/schedulingHelper');
-const schedulingHelper = new SchedulingHelper();
-const { InstagramPoster } = require('./utils/instagramPoster');
-
-// Instagram poster instance
+// Initialize helpers with error handling for serverless
+let schedulingHelper;
+let InstagramPoster;
 let instagramPoster = null;
-const sessions = new Map(); // Store multiple sessions
+const sessions = new Map();
+
+try {
+    const SchedulingHelperClass = require('./utils/schedulingHelper');
+    schedulingHelper = new SchedulingHelperClass();
+} catch (error) {
+    console.warn('SchedulingHelper initialization error:', error.message);
+    schedulingHelper = null;
+}
+
+try {
+    const InstagramModule = require('./utils/instagramPoster');
+    InstagramPoster = InstagramModule.InstagramPoster;
+} catch (error) {
+    console.warn('InstagramPoster not available:', error.message);
+    InstagramPoster = null;
+}
 
 async function scheduleInstagramPost(postData) {
     
@@ -308,6 +329,12 @@ app.post('/export-posts', async (req, res) => {
             return res.status(400).json({ error: 'No posts to export' });
         }
         
+        if (!schedulingHelper) {
+            return res.status(503).json({ 
+                error: 'Export functionality temporarily unavailable' 
+            });
+        }
+        
         const exportContent = schedulingHelper.exportPosts(posts, format);
         const schedule = schedulingHelper.generatePostingSchedule(posts);
         
@@ -342,6 +369,13 @@ app.post('/instagram/login', async (req, res) => {
         
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password required' });
+        }
+        
+        if (!InstagramPoster) {
+            return res.status(503).json({ 
+                error: 'Instagram posting not available in this environment',
+                message: 'Please use the export features instead'
+            });
         }
         
         // Create new poster instance for this session
@@ -463,9 +497,28 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Create sessions directory if it doesn't exist
-const sessionsDir = path.join('/tmp', 'sessions');
-fs.mkdir(sessionsDir, { recursive: true }).catch(console.error);
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ 
+        error: 'Internal server error',
+        message: err.message || 'Something went wrong'
+    });
+});
+
+// Handle 404
+app.use((req, res) => {
+    res.status(404).json({ error: 'Route not found' });
+});
+
+// Create sessions directory if it doesn't exist - only in non-serverless
+if (process.env.VERCEL !== '1') {
+    const sessionsDir = path.join(__dirname, 'sessions');
+    fs.mkdir(sessionsDir, { recursive: true }).catch(console.error);
+} else {
+    const sessionsDir = '/tmp/sessions';
+    fs.mkdir(sessionsDir, { recursive: true }).catch(() => {});
+}
 
 // Only start server if not in serverless environment
 if (process.env.VERCEL !== '1' && require.main === module) {

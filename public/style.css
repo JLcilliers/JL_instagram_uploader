@@ -9,52 +9,80 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: #333;
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 100%;
+    width: 100%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 20px;
+        max-width: 1400px;
+    }
 }
 
 header {
     text-align: center;
     color: white;
-    padding: 40px 0;
+    padding: 20px 10px;
 }
 
 header h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
     margin-bottom: 10px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    word-wrap: break-word;
 }
 
 .subtitle {
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     opacity: 0.95;
+    padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+    header {
+        padding: 40px 0;
+    }
 }
 
 .card {
     background: white;
     border-radius: 12px;
-    padding: 30px;
+    padding: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+    .card {
+        padding: 30px;
+        margin-bottom: 20px;
+    }
 }
 
 .main-content {
     margin-top: 20px;
 }
 
-.upload-section h2, .settings-section h2 {
+.upload-section h2, .settings-section h2, .instagram-section h2 {
     color: #333;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    word-wrap: break-word;
 }
 
 .info {
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .file-upload {
@@ -68,17 +96,23 @@ header h1 {
     width: 100%;
     height: 100%;
     cursor: pointer;
+    z-index: 2;
 }
 
 .file-label {
-    display: block;
-    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    padding: 15px 10px;
     background: #f8f9fa;
     border: 2px dashed #dee2e6;
     border-radius: 8px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    word-wrap: break-word;
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .file-label:hover {
@@ -93,16 +127,26 @@ header h1 {
 }
 
 .btn {
-    padding: 12px 30px;
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    min-height: 44px;
+    white-space: nowrap;
+    flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+    .btn {
+        padding: 12px 30px;
+    }
 }
 
 .btn:disabled {
@@ -154,8 +198,20 @@ header h1 {
 
 .settings-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+@media (min-width: 576px) {
+    .settings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
 }
 
 .setting-item label {
@@ -163,6 +219,7 @@ header h1 {
     margin-bottom: 8px;
     color: #495057;
     font-weight: 500;
+    font-size: clamp(0.85rem, 2vw, 1rem);
 }
 
 .setting-item select,
@@ -171,7 +228,8 @@ header h1 {
     padding: 8px 12px;
     border: 1px solid #dee2e6;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    min-height: 40px;
 }
 
 .setting-item input[type="checkbox"] {
@@ -224,8 +282,21 @@ header h1 {
 
 .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 25px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 576px) {
+    .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+@media (min-width: 992px) {
+    .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+    }
 }
 
 .post-card {
@@ -243,9 +314,21 @@ header h1 {
 
 .post-image {
     width: 100%;
-    height: 350px;
+    height: 250px;
     object-fit: cover;
     border-bottom: 1px solid #eee;
+}
+
+@media (min-width: 576px) {
+    .post-image {
+        height: 300px;
+    }
+}
+
+@media (min-width: 768px) {
+    .post-image {
+        height: 350px;
+    }
 }
 
 .post-content {
@@ -270,17 +353,31 @@ header h1 {
 
 .post-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .post-actions button {
-    flex: 1;
-    padding: 10px;
+    flex: 1 1 auto;
+    min-width: 80px;
+    padding: 8px 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+}
+
+@media (min-width: 480px) {
+    .post-actions {
+        gap: 10px;
+    }
+    
+    .post-actions button {
+        padding: 10px;
+    }
 }
 
 .btn-copy {
@@ -378,19 +475,37 @@ header h1 {
 
 .instagram-login .login-form {
     display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
+    gap: 10px;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .instagram-login .login-form {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+    }
 }
 
 .instagram-login input[type="text"],
 .instagram-login input[type="password"] {
     flex: 1;
-    min-width: 200px;
-    padding: 12px;
+    min-width: 150px;
+    padding: 10px 12px;
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .instagram-login input[type="text"],
+    .instagram-login input[type="password"] {
+        min-width: 200px;
+        width: auto;
+    }
 }
 
 .connected-account {
@@ -497,20 +612,69 @@ header h1 {
     margin-bottom: 20px;
 }
 
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2rem;
-    }
-    
-    .results-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .settings-grid {
-        grid-template-columns: 1fr;
-    }
-    
+/* Mobile-first responsive adjustments */
+@media (max-width: 480px) {
     .post-actions {
         flex-direction: column;
+        gap: 8px;
     }
+    
+    .post-actions button {
+        width: 100%;
+    }
+    
+    .connected-account {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .results-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .results-controls button {
+        width: 100%;
+    }
+}
+
+/* Ensure all text is readable */
+p, span, div, label {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Fix table and list overflow */
+table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+ul, ol {
+    padding-left: 20px;
+    max-width: 100%;
+}
+
+/* Ensure images don't overflow */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Fix horizontal scrolling issues */
+.main-content,
+.upload-section,
+.settings-section,
+.instagram-section,
+.results-section {
+    max-width: 100%;
+    overflow-x: hidden;
 }

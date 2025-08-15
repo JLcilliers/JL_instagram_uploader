@@ -1,12 +1,25 @@
-const { IgApiClient } = require('instagram-private-api');
 const fs = require('fs').promises;
 const path = require('path');
 const sharp = require('sharp');
 const axios = require('axios');
 
+// Lazy load instagram-private-api to avoid initialization issues in serverless
+let IgApiClient;
+try {
+    const igModule = require('instagram-private-api');
+    IgApiClient = igModule.IgApiClient;
+} catch (error) {
+    console.warn('Instagram Private API not available:', error.message);
+}
+
 class InstagramPoster {
     constructor() {
-        this.ig = new IgApiClient();
+        if (IgApiClient) {
+            this.ig = new IgApiClient();
+        } else {
+            this.ig = null;
+            console.warn('Instagram API not initialized');
+        }
         this.loggedIn = false;
         this.user = null;
     }
@@ -14,6 +27,13 @@ class InstagramPoster {
     // Login to Instagram
     async login(username, password) {
         try {
+            if (!this.ig) {
+                return {
+                    success: false,
+                    error: 'Instagram API not available in this environment'
+                };
+            }
+            
             // Generate device ID from username
             this.ig.state.generateDevice(username);
             
