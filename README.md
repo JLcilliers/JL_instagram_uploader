@@ -1,6 +1,8 @@
 # Instagram Post Generator
 
-An automated tool that transforms URLs from Excel files into engaging Instagram posts with AI-generated content and images.
+An automated tool that transforms URLs from Excel files into engaging Instagram posts with AI-generated content and images, with direct posting to Instagram.
+
+🔗 **Repository**: [https://github.com/JLcilliers/JL_instagram_uploader](https://github.com/JLcilliers/JL_instagram_uploader)
 
 ## Features
 
@@ -135,6 +137,63 @@ instagram-tool/
 └── uploads/           # Temporary Excel files
 ```
 
+## Deployment
+
+### Deploy to Vercel
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JLcilliers/JL_instagram_uploader)
+
+1. Click the button above
+2. Add environment variables in Vercel dashboard:
+   - `ANTHROPIC_API_KEY`
+   - `OPENAI_API_KEY`
+
+### Deploy to Render
+1. Fork this repository
+2. Create new Web Service on [Render](https://render.com)
+3. Connect your GitHub repository
+4. Add environment variables in Render dashboard
+5. Deploy
+
+### Deploy to Heroku
+1. Fork this repository
+2. Create new app on [Heroku](https://heroku.com)
+3. Connect GitHub repository
+4. Add Config Vars:
+   - `ANTHROPIC_API_KEY`
+   - `OPENAI_API_KEY`
+5. Deploy
+
+### Deploy to Railway
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/JLcilliers/JL_instagram_uploader)
+
+### Local Development
+```bash
+# Clone the repository
+git clone https://github.com/JLcilliers/JL_instagram_uploader.git
+cd JL_instagram_uploader
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env
+# Edit .env with your API keys
+
+# Start the server
+npm start
+# Or for development with auto-reload
+npm run dev
+```
+
+## Environment Variables
+
+Create a `.env` file with:
+```
+ANTHROPIC_API_KEY=your_claude_api_key
+OPENAI_API_KEY=your_openai_api_key
+PORT=5000
+```
+
 ## License
 
 This tool is for educational and personal use. Ensure you comply with:
@@ -150,3 +209,7 @@ For issues or questions:
 3. Ensure all dependencies are installed
 4. Check browser console for client-side errors
 5. Check server console for backend errors
+
+## Contributing
+
+Pull requests are welcome! Please feel free to submit a Pull Request.
