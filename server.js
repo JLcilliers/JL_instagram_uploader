@@ -17,8 +17,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// Use /tmp for uploads in serverless environment
+const uploadsDir = process.env.VERCEL === '1' ? '/tmp/uploads' : 'uploads/';
 const upload = multer({ 
-    dest: 'uploads/',
+    dest: uploadsDir,
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname).toLowerCase();
         if (ext === '.xlsx' || ext === '.xls') {
@@ -166,9 +168,10 @@ async function generateImage(postContent) {
         
         const timestamp = Date.now();
         const filename = `instagram_${timestamp}.jpg`;
-        const filepath = path.join('public', 'generated', filename);
+        const generatedDir = process.env.VERCEL === '1' ? '/tmp/generated' : path.join('public', 'generated');
+        const filepath = path.join(generatedDir, filename);
         
-        await fs.mkdir(path.join('public', 'generated'), { recursive: true });
+        await fs.mkdir(generatedDir, { recursive: true });
         
         await sharp(Buffer.from(buffer))
             .resize(1080, 1080)
@@ -179,8 +182,9 @@ async function generateImage(postContent) {
     } catch (error) {
         console.error('Error generating image:', error);
         
-        const placeholderPath = path.join('public', 'generated', 'placeholder.jpg');
-        await fs.mkdir(path.join('public', 'generated'), { recursive: true });
+        const generatedDir = process.env.VERCEL === '1' ? '/tmp/generated' : path.join('public', 'generated');
+        const placeholderPath = path.join(generatedDir, 'placeholder.jpg');
+        await fs.mkdir(generatedDir, { recursive: true });
         
         await sharp({
             create: {
@@ -351,7 +355,7 @@ app.post('/instagram/login', async (req, res) => {
             instagramPoster = poster; // Set as active poster
             
             // Save session to file for persistence
-            await poster.saveSession(path.join(__dirname, 'sessions', `${username}.json`));
+            await poster.saveSession(path.join(sessionsDir, `${username}.json`));
             
             res.json({
                 success: true,
@@ -460,10 +464,16 @@ app.get('/health', (req, res) => {
 });
 
 // Create sessions directory if it doesn't exist
-const sessionsDir = path.join(__dirname, 'sessions');
+const sessionsDir = path.join('/tmp', 'sessions');
 fs.mkdir(sessionsDir, { recursive: true }).catch(console.error);
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log('Make sure to set up your .env file with API keys');
-});
+// Only start server if not in serverless environment
+if (process.env.VERCEL !== '1' && require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+        console.log('Make sure to set up your .env file with API keys');
+    });
+}
+
+// Export for serverless
+module.exports = app;
