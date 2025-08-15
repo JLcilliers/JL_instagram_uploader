@@ -141,13 +141,17 @@ instagram-tool/
 
 ## Deployment
 
-### Deploy to Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JLcilliers/JL_instagram_uploader)
+### Deploy to Render (Recommended - Full Features)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/JLcilliers/JL_instagram_uploader)
 
-1. Click the button above
-2. Add environment variables in Vercel dashboard:
-   - `ANTHROPIC_API_KEY`
-   - `OPENAI_API_KEY`
+### Deploy to Railway (One-Click Deploy)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/deploy?template=https://github.com/JLcilliers/JL_instagram_uploader)
+
+### Deploy to Heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/JLcilliers/JL_instagram_uploader)
+
+### Deploy to Replit
+[![Run on Replit](https://replit.com/badge/github/JLcilliers/JL_instagram_uploader)](https://replit.com/github/JLcilliers/JL_instagram_uploader)
 
 ### Deploy to Render
 1. Fork this repository

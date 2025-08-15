@@ -1,0 +1,30 @@
+{
+  "name": "Instagram Post Generator",
+  "description": "Generate Instagram posts from URLs with AI",
+  "repository": "https://github.com/JLcilliers/JL_instagram_uploader",
+  "keywords": ["instagram", "ai", "automation"],
+  "env": {
+    "ANTHROPIC_API_KEY": {
+      "description": "Your Claude API key from console.anthropic.com",
+      "required": true
+    },
+    "OPENAI_API_KEY": {
+      "description": "Your OpenAI API key from platform.openai.com",
+      "required": true
+    },
+    "NODE_ENV": {
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

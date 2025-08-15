@@ -520,11 +520,24 @@ if (process.env.VERCEL !== '1') {
     fs.mkdir(sessionsDir, { recursive: true }).catch(() => {});
 }
 
-// Only start server if not in serverless environment
-if (process.env.VERCEL !== '1' && require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
-        console.log('Make sure to set up your .env file with API keys');
+// Start server
+if (require.main === module) {
+    const server = app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log('Environment:', process.env.NODE_ENV || 'development');
+        if (!process.env.ANTHROPIC_API_KEY) {
+            console.warn('Warning: ANTHROPIC_API_KEY not set');
+        }
+        if (!process.env.OPENAI_API_KEY) {
+            console.warn('Warning: OPENAI_API_KEY not set');
+        }
+    });
+    
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+        server.close(() => {
+            console.log('Server closed');
+        });
     });
 }
 

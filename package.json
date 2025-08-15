@@ -10,8 +10,8 @@
     "build": "echo 'No build required'"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
   },
   "keywords": [
     "instagram",
