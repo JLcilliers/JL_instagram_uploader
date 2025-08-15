@@ -4,6 +4,8 @@ An automated tool that transforms URLs from Excel files into engaging Instagram 
 
 🔗 **Repository**: [https://github.com/JLcilliers/JL_instagram_uploader](https://github.com/JLcilliers/JL_instagram_uploader)
 
+📅 **Last Updated**: January 15, 2025
+
 ## Features
 
 - Upload Excel files containing URLs
