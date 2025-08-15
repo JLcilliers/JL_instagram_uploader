@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Post Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Instagram Post Generator</h1>
+            <p class="subtitle">Transform URLs into engaging Instagram posts with AI</p>
+        </header>
+
+        <div class="main-content">
+            <div class="upload-section card">
+                <h2>Step 1: Upload Excel File</h2>
+                <p class="info">Upload an Excel file containing URLs in the first column</p>
+                <div class="file-upload">
+                    <input type="file" id="excelFile" accept=".xlsx,.xls">
+                    <label for="excelFile" class="file-label">
+                        <span id="fileName">Choose Excel file...</span>
+                    </label>
+                </div>
+                <button id="processBtn" class="btn btn-primary" disabled>
+                    <span class="btn-text">Process URLs</span>
+                    <span class="spinner" style="display: none;"></span>
+                </button>
+            </div>
+
+            <div class="instagram-section card">
+                <h2>Step 2: Connect Instagram Account</h2>
+                <div id="instagramLogin" class="instagram-login">
+                    <div class="login-form">
+                        <input type="text" id="igUsername" placeholder="Instagram username">
+                        <input type="password" id="igPassword" placeholder="Instagram password">
+                        <button id="igLoginBtn" class="btn btn-primary">Connect Instagram</button>
+                    </div>
+                    <div id="twoFactorSection" style="display: none;">
+                        <p>Enter the verification code sent to your device:</p>
+                        <input type="text" id="twoFactorCode" placeholder="6-digit code">
+                        <button id="verifyCodeBtn" class="btn btn-primary">Verify</button>
+                    </div>
+                </div>
+                <div id="instagramConnected" style="display: none;">
+                    <div class="connected-account">
+                        <img id="igProfilePic" src="" alt="Profile" class="profile-pic">
+                        <div class="account-info">
+                            <h4 id="igFullName"></h4>
+                            <p id="igUsername2">@username</p>
+                            <button id="igLogoutBtn" class="btn btn-outline">Disconnect</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section card">
+                <h2>Step 3: Configure Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label>Post Style</label>
+                        <select id="postStyle">
+                            <option value="professional">Professional</option>
+                            <option value="casual">Casual</option>
+                            <option value="creative">Creative</option>
+                            <option value="educational">Educational</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Include Emojis</label>
+                        <input type="checkbox" id="includeEmojis" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Number of Hashtags</label>
+                        <input type="number" id="hashtagCount" min="5" max="30" value="15">
+                    </div>
+                    <div class="setting-item">
+                        <label>Auto-Post to Instagram</label>
+                        <input type="checkbox" id="autoPost" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Delay Between Posts (minutes)</label>
+                        <input type="number" id="postDelay" min="5" max="60" value="10">
+                    </div>
+                </div>
+            </div>
+
+            <div id="progressSection" class="progress-section card" style="display: none;">
+                <h2>Processing URLs</h2>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </div>
+
+            <div id="resultsSection" class="results-section" style="display: none;">
+                <h2>Generated Posts</h2>
+                <div class="results-controls">
+                    <button id="downloadAll" class="btn btn-secondary">Download All Posts</button>
+                    <button id="clearResults" class="btn btn-outline">Clear Results</button>
+                </div>
+                <div id="results" class="results-grid"></div>
+            </div>
+
+            <div id="errorSection" class="error-section card" style="display: none;">
+                <h3>Errors</h3>
+                <div id="errorList"></div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="instructions card">
+                <h3>How to Schedule Posts on Instagram</h3>
+                <ol>
+                    <li>Generate your posts using this tool</li>
+                    <li>Download the images and copy the captions</li>
+                    <li>Use one of these services to schedule:
+                        <ul>
+                            <li><a href="https://buffer.com" target="_blank">Buffer</a> - Simple scheduling tool</li>
+                            <li><a href="https://later.com" target="_blank">Later</a> - Visual content calendar</li>
+                            <li><a href="https://hootsuite.com" target="_blank">Hootsuite</a> - Enterprise solution</li>
+                            <li><a href="https://business.facebook.com/creatorstudio" target="_blank">Meta Creator Studio</a> - Official Facebook tool</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </footer>
+    </div>
+
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
