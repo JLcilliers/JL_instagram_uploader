@@ -2,18 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
+      "src": "server-simple.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/generated/(.*)",
-      "dest": "/public/generated/$1"
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|ico|svg))",
@@ -21,7 +17,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/server-simple.js"
     }
   ],
   "env": {
@@ -29,8 +25,8 @@
     "VERCEL": "1"
   },
   "functions": {
-    "server.js": {
-      "maxDuration": 30
+    "server-simple.js": {
+      "maxDuration": 10
     }
   }
 }
