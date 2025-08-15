@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('igLoginBtn').addEventListener('click', loginToInstagram);
     document.getElementById('igLogoutBtn').addEventListener('click', logoutInstagram);
     document.getElementById('verifyCodeBtn').addEventListener('click', verify2FA);
+    document.getElementById('postAllBtn').addEventListener('click', postAllToInstagram);
     
     // Check Instagram status on load
     checkInstagramStatus();
@@ -97,6 +98,15 @@ async function uploadFile() {
             }, 2000);
             
             showNotification(`Successfully generated ${result.successCount} posts!`, 'success');
+            
+            // Auto-post if connected and enabled
+            if (isInstagramConnected && document.getElementById('autoPost').checked) {
+                setTimeout(() => {
+                    if (confirm(`Ready to post ${result.successCount} items to Instagram?`)) {
+                        postAllToInstagram();
+                    }
+                }, 1000);
+            }
         } else {
             throw new Error(result.error || 'Failed to process URLs');
         }
@@ -574,6 +584,11 @@ function showConnectedAccount(user) {
     }
     document.getElementById('igFullName').textContent = user.fullName || user.username;
     document.getElementById('igUsername2').textContent = `@${user.username}`;
+    
+    // Show Post All button if posts exist
+    if (processedPosts.length > 0) {
+        document.getElementById('postAllBtn').style.display = 'inline-block';
+    }
 }
 
 async function postToInstagram(index) {

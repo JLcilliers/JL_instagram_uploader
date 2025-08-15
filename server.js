@@ -208,27 +208,14 @@ async function generateImage(postContent) {
     }
 }
 
-// Initialize helpers with error handling for serverless
-let schedulingHelper;
-let InstagramPoster;
+// Initialize helpers - force loading for production
+const SchedulingHelper = require('./utils/schedulingHelper');
+const schedulingHelper = new SchedulingHelper();
+const { InstagramPoster } = require('./utils/instagramPoster');
+
+// Instagram poster instance
 let instagramPoster = null;
 const sessions = new Map();
-
-try {
-    const SchedulingHelperClass = require('./utils/schedulingHelper');
-    schedulingHelper = new SchedulingHelperClass();
-} catch (error) {
-    console.warn('SchedulingHelper initialization error:', error.message);
-    schedulingHelper = null;
-}
-
-try {
-    const InstagramModule = require('./utils/instagramPoster');
-    InstagramPoster = InstagramModule.InstagramPoster;
-} catch (error) {
-    console.warn('InstagramPoster not available:', error.message);
-    InstagramPoster = null;
-}
 
 async function scheduleInstagramPost(postData) {
     
@@ -272,20 +259,15 @@ app.post('/process-urls', upload.single('excel'), async (req, res) => {
                 
                 const imageUrl = await generateImage(postContent);
                 
-                const scheduledPost = await scheduleInstagramPost({
-                    ...postContent,
-                    imageUrl,
-                    sourceUrl: url
-                });
-                
                 posts.push({
                     id: i + 1,
                     url,
                     caption: postContent.caption,
                     hashtags: postContent.hashtags,
                     imageUrl,
-                    status: scheduledPost.status,
-                    message: scheduledPost.message
+                    sourceUrl: url,
+                    status: 'ready_to_post',
+                    message: 'Post generated successfully'
                 });
                 
                 if (i < urls.length - 1) {
@@ -369,13 +351,6 @@ app.post('/instagram/login', async (req, res) => {
         
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password required' });
-        }
-        
-        if (!InstagramPoster) {
-            return res.status(503).json({ 
-                error: 'Instagram posting not available in this environment',
-                message: 'Please use the export features instead'
-            });
         }
         
         // Create new poster instance for this session
